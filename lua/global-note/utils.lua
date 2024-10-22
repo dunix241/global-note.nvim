@@ -52,7 +52,7 @@ M.joinpath = function(...)
     return vim.fs.joinpath(...)
   end
 
-  return table.concat({ ... }, '/'):gsub('//+', '/')
+  return table.concat({ ... }, "/"):gsub("//+", "/")
 end
 
 return M

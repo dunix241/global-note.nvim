@@ -5,7 +5,6 @@ local utils = require("global-note.utils")
 ---@field filename string|fun(): string? Filename of the note.
 ---@field directory string|fun(): string? Directory to keep notes.
 ---@field title string|fun(): string? Floating window title.
----@field command_name? string Ex command name.
 ---@field window_config table|fun(): table A nvim_open_win config.
 ---@field post_open fun(buffer_id: number, window_id: number) It's called after the window creation.
 ---@field autosave boolean Whether to use autosave.
@@ -37,10 +36,6 @@ local new = function(options)
       options.title,
       { "string", "function" },
     },
-    ["options.command_name"] = {
-      options.command_name,
-      { "string", "nil" },
-    },
     ["options.window_config"] = {
       options.window_config,
       { "table", "function" },
@@ -57,20 +52,6 @@ local new = function(options)
 
   ---@class GlobalNote_Preset
   local p = vim.deepcopy(options)
-
-  if type(p.command_name) == "string" and p.command_name ~= "" then
-    local desc = "Toggle note in a floating window"
-    if p.name ~= "" then
-      desc = string.format("Toggle %s note in a floating window", p.name)
-    end
-
-    vim.api.nvim_create_user_command(p.command_name, function()
-      p:toggle()
-    end, {
-      nargs = 0,
-      desc = desc
-    })
-  end
 
   ---Expands preset fields to a finite values.
   ---If user can't produce a critical value then nil is returned.
@@ -117,6 +98,8 @@ local new = function(options)
         error("Title function should return a string or a nil")
       end
     end
+
+    title = title or vim.fn.fnamemodify(filename, ":t")
 
     if title ~= nil then
       window_config.title = title
