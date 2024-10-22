@@ -263,8 +263,6 @@ require('global-note').pick_note({local_scope=true})
 
 </details>
 
-````
-
 <!-- panvimdoc-ignore-start -->
 
 ---
@@ -297,7 +295,7 @@ vim.keymap.set("n", "<leader>n", function()
 end, {
   desc = "Toggle project note",
 })
-````
+```
 
 </details>
 
